@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bubble Pop - Fun Bubble Shooting Game | FireCode Studio</title>
+    <meta name="description" content="Download Bubble Pop - An exciting bubble shooting game by FireCode Studio. Pop bubbles, clear levels, and have endless fun!">
+    <meta name="keywords" content="Bubble Pop, bubble shooter, puzzle game, mobile game, android game, firecode studio">
+    <meta name="author" content="FireCode Studio">
+    <meta property="og:title" content="Bubble Pop - Fun Bubble Shooting Game">
+    <meta property="og:description" content="Download Bubble Pop and enjoy hours of bubble-popping fun!">
+    <meta property="og:type" content="website">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #ff6b9d;
+            --primary-light: #ff8fb3;
+            --primary-dark: #e84a7f;
+            --secondary: #4ecdc4;
+            --secondary-light: #7eddd6;
+            --accent: #ffe66d;
+            --accent-orange: #ff9f43;
+            --purple: #a55eea;
+            --blue: #45aaf2;
+            --green: #26de81;
+            --red: #fc5c65;
+            --white: #ffffff;
+            --light-bg: #f8f9ff;
+            --dark-text: #2d3436;
+            --gray-text: #636e72;
+            --shadow: 0 10px 40px rgba(0,0,0,0.1);
+            --shadow-lg: 0 20px 60px rgba(0,0,0,0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: var(--light-bg);
+            color: var(--dark-text);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Floating Bubbles Animation */
+        .bubbles-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .bubble {
+            position: absolute;
+            border-radius: 50%;
+            animation: float-up linear infinite;
+            opacity: 0.6;
+        }
+
+        .bubble::before {
+            content: '';
+            position: absolute;
+            top: 15%;
+            left: 20%;
+            width: 30%;
+            height: 30%;
+            background: rgba(255,255,255,0.8);
+            border-radius: 50%;
+            transform: rotate(-45deg);
+        }
+
+        @keyframes float-up {
+            0% {
+                transform: translateY(100vh) scale(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.6;
+            }
+            90% {
+                opacity: 0.6;
+            }
+            100% {
+                transform: translateY(-100px) scale(1);
+                opacity: 0;
+            }
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0,0,0,0.05);
+        }
+
+        .logo {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--dark-text);
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 6rem 2rem 4rem;
+            position: relative;
+            background: linear-gradient(135deg, #fff5f8 0%, #f0fffe 50%, #fff9e6 100%);
+        }
+
+        .hero-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            width: 100%;
+        }
+
+        .hero-text {
+            animation: slideInLeft 1s ease-out;
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 0.5rem 1.2rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .hero h1 {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--purple), var(--blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-description {
+            font-size: 1.2rem;
+            color: var(--gray-text);
+            margin-bottom: 2rem;
+            max-width: 500px;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .play-store-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+            background: linear-gradient(135deg, #000 0%, #333 100%);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1rem;
+            transition: all 0.3s;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .play-store-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+        }
+
+        .play-store-btn svg {
+            width: 32px;
+            height: 32px;
+        }
+
+        .play-store-btn .btn-text {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .play-store-btn .btn-text span:first-child {
+            font-size: 0.7rem;
+            opacity: 0.8;
+        }
+
+        .play-store-btn .btn-text span:last-child {
+            font-size: 1.1rem;
+        }
+
+        .hero-visual {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: slideInRight 1s ease-out;
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .phone-mockup {
+            width: 300px;
+            height: 600px;
+            background: linear-gradient(145deg, #1a1a2e, #16213e);
+            border-radius: 40px;
+            padding: 12px;
+            box-shadow: var(--shadow-lg), 0 0 60px rgba(255,107,157,0.2);
+            position: relative;
+        }
+
+        .phone-screen {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, #1a1a2e 0%, #0f0f23 100%);
+            border-radius: 30px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .game-preview {
+            text-align: center;
+        }
+
+        .game-preview .bubble-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            padding: 20px;
+        }
+
+        .game-preview .pop-bubble {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            animation: pop 0.5s ease-out infinite;
+        }
+
+        .pop-bubble:nth-child(1) { background: var(--red); animation-delay: 0s; }
+        .pop-bubble:nth-child(2) { background: var(--accent); animation-delay: 0.1s; }
+        .pop-bubble:nth-child(3) { background: var(--secondary); animation-delay: 0.2s; }
+        .pop-bubble:nth-child(4) { background: var(--purple); animation-delay: 0.3s; }
+        .pop-bubble:nth-child(5) { background: var(--blue); animation-delay: 0.4s; }
+        .pop-bubble:nth-child(6) { background: var(--green); animation-delay: 0.5s; }
+        .pop-bubble:nth-child(7) { background: var(--primary); animation-delay: 0.6s; }
+        .pop-bubble:nth-child(8) { background: var(--accent-orange); animation-delay: 0.7s; }
+        .pop-bubble:nth-child(9) { background: var(--secondary-light); animation-delay: 0.8s; }
+        .pop-bubble:nth-child(10) { background: var(--purple); animation-delay: 0.9s; }
+
+        @keyframes pop {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .game-preview h3 {
+            color: white;
+            font-family: 'Fredoka', sans-serif;
+            font-size: 2rem;
+            margin-top: 1rem;
+            text-shadow: 0 0 20px rgba(255,107,157,0.5);
+        }
+
+        .floating-bubbles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+        }
+
+        .floating-bubble {
+            position: absolute;
+            border-radius: 50%;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-20px) scale(1.05); }
+        }
+
+        /* Features Section */
+        .features {
+            padding: 6rem 2rem;
+            background: white;
+            position: relative;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-header h2 {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 2.5rem;
+            color: var(--dark-text);
+            margin-bottom: 1rem;
+        }
+
+        .section-header p {
+            color: var(--gray-text);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .features-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: var(--light-bg);
+            padding: 2.5rem;
+            border-radius: 20px;
+            text-align: center;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary-light);
+            box-shadow: var(--shadow);
+        }
+
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1.5rem;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+        }
+
+        .feature-card:nth-child(1) .feature-icon { background: linear-gradient(135deg, #ff6b9d, #ff8fb3); }
+        .feature-card:nth-child(2) .feature-icon { background: linear-gradient(135deg, #4ecdc4, #7eddd6); }
+        .feature-card:nth-child(3) .feature-icon { background: linear-gradient(135deg, #ffe66d, #ff9f43); }
+        .feature-card:nth-child(4) .feature-icon { background: linear-gradient(135deg, #a55eea, #8854d0); }
+        .feature-card:nth-child(5) .feature-icon { background: linear-gradient(135deg, #45aaf2, #2ecc71); }
+        .feature-card:nth-child(6) .feature-icon { background: linear-gradient(135deg, #fc5c65, #eb3b5a); }
+
+        .feature-card h3 {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.4rem;
+            margin-bottom: 0.8rem;
+            color: var(--dark-text);
+        }
+
+        .feature-card p {
+            color: var(--gray-text);
+            line-height: 1.7;
+        }
+
+        /* Screenshots Section */
+        .screenshots {
+            padding: 6rem 2rem;
+            background: linear-gradient(135deg, #fff5f8 0%, #f0fffe 50%, #fff9e6 100%);
+        }
+
+        .screenshots-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .screenshot-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: all 0.3s;
+        }
+
+        .screenshot-card:hover {
+            transform: scale(1.05);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .screenshot-placeholder {
+            height: 400px;
+            background: linear-gradient(145deg, #1a1a2e, #16213e);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            padding: 2rem;
+        }
+
+        .screenshot-placeholder .mini-bubbles {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-bottom: 1rem;
+        }
+
+        .mini-bubble {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+        }
+
+        .screenshot-card p {
+            padding: 1rem;
+            text-align: center;
+            font-weight: 600;
+            color: var(--dark-text);
+        }
+
+        /* Download Section */
+        .download {
+            padding: 6rem 2rem;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .download::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.5;
+        }
+
+        .download-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .download h2 {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 3rem;
+            color: white;
+            margin-bottom: 1rem;
+        }
+
+        .download p {
+            color: rgba(255,255,255,0.8);
+            font-size: 1.2rem;
+            margin-bottom: 2.5rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .download-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .download-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 1rem;
+            background: white;
+            color: var(--dark-text);
+            padding: 1.2rem 2.5rem;
+            border-radius: 15px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .download-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+
+        .download-btn svg {
+            width: 36px;
+            height: 36px;
+        }
+
+        .download-btn .btn-text {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .download-btn .btn-text span:first-child {
+            font-size: 0.75rem;
+            color: var(--gray-text);
+        }
+
+        .download-btn .btn-text span:last-child {
+            font-size: 1.2rem;
+            color: var(--dark-text);
+        }
+
+        /* About Section */
+        .about {
+            padding: 6rem 2rem;
+            background: white;
+        }
+
+        .about-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .about-text h2 {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--dark-text);
+        }
+
+        .about-text p {
+            color: var(--gray-text);
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.8;
+        }
+
+        .developer-info {
+            background: var(--light-bg);
+            padding: 2rem;
+            border-radius: 20px;
+        }
+
+        .developer-info h3 {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .developer-info p {
+            color: var(--gray-text);
+            margin-bottom: 1rem;
+        }
+
+        .contact-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .contact-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(255,107,157,0.4);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--dark-text);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-logo {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .social-link {
+            width: 45px;
+            height: 45px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .social-link:hover {
+            background: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        .copyright {
+            color: rgba(255,255,255,0.5);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero-description {
+                margin: 0 auto 2rem;
+            }
+
+            .cta-buttons {
+                justify-content: center;
+            }
+
+            .hero-visual {
+                order: -1;
+            }
+
+            .phone-mockup {
+                width: 250px;
+                height: 500px;
+            }
+
+            .about-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 576px) {
+            header {
+                padding: 1rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .hero {
+                padding: 5rem 1rem 3rem;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .play-store-btn {
+                padding: 0.8rem 1.5rem;
+            }
+
+            .phone-mockup {
+                width: 200px;
+                height: 400px;
+            }
+
+            .section-header h2 {
+                font-size: 2rem;
+            }
+
+            .features, .screenshots, .download, .about {
+                padding: 4rem 1rem;
+            }
+
+            .download h2 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating Bubbles Background -->
+    <div class="bubbles-container" id="bubbles"></div>
+
+    <!-- Header -->
+    <header>
+        <div class="logo">
+            <div class="logo-icon">🫧</div>
+            Bubble Pop
+        </div>
+        <nav>
+            <ul class="nav-links">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#screenshots">Screenshots</a></li>
+                <li><a href="#download">Download</a></li>
+                <li><a href="#about">About</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-text">
+                <span class="hero-badge">🎮 #1 Bubble Game</span>
+                <h1>Pop Your Way to Victory!</h1>
+                <p class="hero-description">
+                    Experience the most addictive bubble shooting puzzle game! Match colors, clear levels, and become the ultimate Bubble Pop champion. Simple to play, hard to put down!
+                </p>
+                <div class="cta-buttons">
+                    <a href="https://play.google.com/store/apps/details?id=com.firecode.studio.bubble_pop" class="play-store-btn" target="_blank" rel="noopener noreferrer">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M3.609 1.814L13.792 12 3.61 22.186a.996.996 0 01-.61-.92V2.734a1 1 0 01.609-.92zm10.89 10.893l2.302 2.302-10.937 6.333 8.635-8.635zm3.199-3.198l2.807 1.626a1 1 0 010 1.73l-2.808 1.626L15.206 12l2.492-2.491zM5.864 2.658L16.8 8.99l-2.302 2.302-8.634-8.634z"/>
+                        </svg>
+                        <div class="btn-text">
+                            <span>GET IT ON</span>
+                            <span>Google Play</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="phone-mockup">
+                    <div class="phone-screen">
+                        <div class="floating-bubbles">
+                            <div class="floating-bubble" style="width: 20px; height: 20px; background: var(--primary); top: 20%; left: 10%;"></div>
+                            <div class="floating-bubble" style="width: 15px; height: 15px; background: var(--secondary); top: 30%; right: 15%;"></div>
+                            <div class="floating-bubble" style="width: 25px; height: 25px; background: var(--accent); top: 60%; left: 20%;"></div>
+                            <div class="floating-bubble" style="width: 18px; height: 18px; background: var(--purple); top: 70%; right: 10%;"></div>
+                        </div>
+                        <div class="game-preview">
+                            <div class="bubble-grid">
+                                <div class="pop-bubble"></div>
+                                <div class="pop-bubble"></div>
+                                <div class="pop-bubble"></div>
+                                <div class="pop-bubble"></div>
+                                <div class="pop-bubble"></div>
+                                <div class="pop-bubble"></div>
+                                <div class="pop-bubble"></div>
+                                <div class="pop-bubble"></div>
+                                <div class="pop-bubble"></div>
+                                <div class="pop-bubble"></div>
+                            </div>
+                            <h3>Bubble Pop</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="section-header">
+            <h2>Amazing Features</h2>
+            <p>Discover what makes Bubble Pop the best bubble shooting game on mobile!</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🎯</div>
+                <h3>Easy Controls</h3>
+                <p>Simple tap and aim mechanics make it easy for anyone to play. Just aim, shoot, and pop!</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🌈</div>
+                <h3>Colorful Bubbles</h3>
+                <p>Beautiful vibrant bubbles with stunning visual effects and satisfying pop animations.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🏆</div>
+                <h3>Exciting Levels</h3>
+                <p>Hundreds of challenging levels with unique puzzles. Can you beat them all?</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h3>Power-Ups</h3>
+                <p>Unlock special power-ups and boosters to help you clear difficult levels faster!</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🎁</div>
+                <h3>Daily Rewards</h3>
+                <p>Log in every day to claim amazing rewards and freebies!</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">👥</div>
+                <h3>Leaderboards</h3>
+                <p>Compete with friends and players worldwide on the global leaderboards!</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Screenshots Section -->
+    <section class="screenshots" id="screenshots">
+        <div class="section-header">
+            <h2>Game Screenshots</h2>
+            <p>Take a peek at the colorful world of Bubble Pop!</p>
+        </div>
+        <div class="screenshots-grid">
+            <div class="screenshot-card">
+                <div class="screenshot-placeholder" style="background: linear-gradient(180deg, #1a1a2e, #2d1b4e);">
+                    <div class="mini-bubbles">
+                        <div class="mini-bubble" style="background: var(--primary);"></div>
+                        <div class="mini-bubble" style="background: var(--secondary);"></div>
+                        <div class="mini-bubble" style="background: var(--accent);"></div>
+                        <div class="mini-bubble" style="background: var(--purple);"></div>
+                    </div>
+                    <h3 style="color: white; font-family: 'Fredoka', sans-serif;">Level 1</h3>
+                </div>
+                <p>Begin Your Adventure</p>
+            </div>
+            <div class="screenshot-card">
+                <div class="screenshot-placeholder" style="background: linear-gradient(180deg, #0f3460, #16213e);">
+                    <div class="mini-bubbles">
+                        <div class="mini-bubble" style="background: var(--red);"></div>
+                        <div class="mini-bubble" style="background: var(--blue);"></div>
+                        <div class="mini-bubble" style="background: var(--green);"></div>
+                        <div class="mini-bubble" style="background: var(--accent-orange);"></div>
+                    </div>
+                    <h3 style="color: white; font-family: 'Fredoka', sans-serif;">Level 25</h3>
+                </div>
+                <p>Challenge Begins</p>
+            </div>
+            <div class="screenshot-card">
+                <div class="screenshot-placeholder" style="background: linear-gradient(180deg, #2c003e, #512b58);">
+                    <div class="mini-bubbles">
+                        <div class="mini-bubble" style="background: var(--purple);"></div>
+                        <div class="mini-bubble" style="background: var(--primary);"></div>
+                        <div class="mini-bubble" style="background: var(--blue);"></div>
+                        <div class="mini-bubble" style="background: var(--secondary);"></div>
+                    </div>
+                    <h3 style="color: white; font-family: 'Fredoka', sans-serif;">Level 50</h3>
+                </div>
+                <p>Master Mode</p>
+            </div>
+            <div class="screenshot-card">
+                <div class="screenshot-placeholder" style="background: linear-gradient(180deg, #1e3d59, #ff6e40);">
+                    <div class="mini-bubbles">
+                        <div class="mini-bubble" style="background: var(--accent-orange);"></div>
+                        <div class="mini-bubble" style="background: var(--red);"></div>
+                        <div class="mini-bubble" style="background: var(--accent);"></div>
+                        <div class="mini-bubble" style="background: var(--primary);"></div>
+                    </div>
+                    <h3 style="color: white; font-family: 'Fredoka', sans-serif;">Boss Level</h3>
+                </div>
+                <p>Epic Battles</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Download Section -->
+    <section class="download" id="download">
+        <div class="download-content">
+            <h2>Download Now!</h2>
+            <p>Join millions of players worldwide and start popping bubbles today. Available free on Google Play Store!</p>
+            <div class="download-buttons">
+                <a href="https://play.google.com/store/apps/details?id=com.firecode.studio.bubble_pop" class="download-btn" target="_blank" rel="noopener noreferrer">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M3.609 1.814L13.792 12 3.61 22.186a.996.996 0 01-.61-.92V2.734a1 1 0 01.609-.92zm10.89 10.893l2.302 2.302-10.937 6.333 8.635-8.635zm3.199-3.198l2.807 1.626a1 1 0 010 1.73l-2.808 1.626L15.206 12l2.492-2.491zM5.864 2.658L16.8 8.99l-2.302 2.302-8.634-8.634z"/>
+                    </svg>
+                    <div class="btn-text">
+                        <span>DOWNLOAD ON</span>
+                        <span>Google Play</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about" id="about">
+        <div class="about-content">
+            <div class="about-text">
+                <h2>About Bubble Pop</h2>
+                <p>Bubble Pop is an exciting and addictive bubble shooting puzzle game developed by FireCode Studio. With stunning visuals, smooth gameplay, and hundreds of levels, it offers endless entertainment for players of all ages.</p>
+                <p>The game combines classic bubble shooter mechanics with modern features like power-ups, daily rewards, and global leaderboards. Whether you're a casual player or a competitive gamer, Bubble Pop has something for everyone!</p>
+            </div>
+            <div class="developer-info">
+                <h3>👨‍💻 Developer</h3>
+                <p><strong>FireCode Studio</strong></p>
+                <p>We're a passionate team of game developers dedicated to creating fun and engaging mobile gaming experiences.</p>
+                <p>📧 Contact: <a href="mailto:firecodestudio8@gmail.com" style="color: var(--primary); text-decoration: none;">firecodestudio8@gmail.com</a></p>
+                <br>
+                <a href="mailto:firecodestudio8@gmail.com" class="contact-btn">
+                    <span>📧</span> Contact Us
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">🫧 Bubble Pop</div>
+            <div class="footer-links">
+                <a href="#features">Features</a>
+                <a href="#screenshots">Screenshots</a>
+                <a href="#download">Download</a>
+                <a href="#about">About</a>
+                <a href="https://play.google.com/store/apps/details?id=com.firecode.studio.bubble_pop" target="_blank" rel="noopener noreferrer">Google Play</a>
+            </div>
+            <div class="social-links">
+                <a href="mailto:firecodestudio8@gmail.com" class="social-link" title="Email">
+                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                    </svg>
+                </a>
+            </div>
+            <p class="copyright">© 2024 FireCode Studio. All rights reserved. Bubble Pop is a trademark of FireCode Studio.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Create floating bubbles animation
+        function createBubbles() {
+            const container = document.getElementById('bubbles');
+            const bubbleCount = 15;
+            const colors = ['#ff6b9d', '#4ecdc4', '#ffe66d', '#a55eea', '#45aaf2', '#26de81', '#fc5c65'];
+
+            for (let i = 0; i < bubbleCount; i++) {
+                const bubble = document.createElement('div');
+                bubble.className = 'bubble';
+                
+                const size = Math.random() * 30 + 15;
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                const left = Math.random() * 100;
+                const duration = Math.random() * 10 + 10;
+                const delay = Math.random() * 10;
+
+                bubble.style.width = size + 'px';
+                bubble.style.height = size + 'px';
+                bubble.style.background = color;
+                bubble.style.left = left + '%';
+                bubble.style.animationDuration = duration + 's';
+                bubble.style.animationDelay = delay + 's';
+
+                container.appendChild(bubble);
+            }
+        }
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Initialize
+        createBubbles();
+    </script>
+</body>
+</html>
